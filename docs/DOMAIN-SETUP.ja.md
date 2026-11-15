@@ -10,14 +10,14 @@ Cloudflare Registrar などのドメイン管理サービスで `taronagata.com`
 
 公式手順：[Cloudflare でドメインを登録する](https://developers.cloudflare.com/registrar/get-started/register-domain/)
 
-## 2. コードを反映し、GitHub Pages を設定する
+## 2. 既存の GitHub Pages を維持する
 
-1. [リポジトリ](https://github.com/tarofractal/tarofractal.github.io) で `personal-site-2026` ブランチの PR を確認し、公開する内容に問題がなければ `main` にマージします。
-2. リポジトリの **Settings → Pages → Build and deployment → Source** を **GitHub Actions** にします。
-3. **Actions** タブで Pages のデプロイが成功していることを確認します。必要なら Pages ワークフローを手動実行します。配信対象は `dist/` です。
-4. まず <https://tarofractal.github.io/> を開き、表示と言語切り替え、CV、外部リンクを確認します。
+現在の公開URLは **https://tarofractal.github.io/** です。インターン応募で提出済みのURLを保つため、GitHub Pages は **Deploy from a branch → main → / (root)** の既存設定を使用します。GitHub Actions への切り替えは不要です。
 
-既存サイトが公開されている場合、PR をマージしてデプロイすると新しい内容へ切り替わります。
+1. `dist/` の内容を編集します。詳細ページ本文を変更した場合は `python3 scripts/render-detail-pages.py` で生成します。
+2. `python3 scripts/publish-root.py` で公開用ルートに同期します。
+3. 変更を `main` に反映すると、GitHub Pages が更新されます。
+4. https://tarofractal.github.io/ で表示とリンクを確認します。
 
 ## 3. ドメイン所有権を検証する
 
@@ -31,7 +31,7 @@ TXT の値はアカウントごとに異なります。このガイドの例か�
 
 リポジトリの **Settings → Pages → Custom domain** に `taronagata.com` を入力して **Save** します。その後で、次の DNS レコードを設定します。
 
-GitHub Actions で公開する場合、`dist/CNAME` ファイルだけでは独自ドメインの設定は完了しません。Pages の設定画面で指定してください。
+現在のブランチ公開では、保存すると GitHub がルートに `CNAME` を作成します。以後の更新でもこのファイルを保持します。
 
 ## 5. DNS を設定する
 
@@ -69,6 +69,6 @@ curl -I https://taronagata.com
 
 ## 公開後の更新
 
-`dist/` の内容を編集して `main` に反映すると、Pages のワークフローで更新します。ドメインの更新期限と支払い方法も確認し、自動更新を設定しておくと失効を防げます。
+`dist/` の内容を編集し、`python3 scripts/publish-root.py` でルートへ同期して `main` に反映すると、GitHub Pages が更新されます。ドメインの更新期限と支払い方法も確認し、自動更新を設定しておくと失効を防げます。
 
 Sites を独自ドメインの公開先に選ぶ場合は、上の GitHub Pages 用 DNS 値を使いません。Sites 側でドメインを登録し、返された検証レコードと接続先を使用します。同じドメインの公開先は一つに決めて設定してください。
