@@ -38,9 +38,18 @@ python3 -m http.server 3000 --directory dist
 
 長期の公開先には GitHub Pages を使用できます。GitHub Actions が `dist/` を配信する設定にします。公開設定と `taronagata.com` の接続は [独自ドメイン設定ガイド](docs/DOMAIN-SETUP.ja.md) に記載しています。
 
-Sites にも確認用の配信先を用意します。設定上の予定 URL は `https://taro-nagata-observatory.tarofractal.chatgpt.site` です。URL が設定されているだけではデプロイ完了を意味しません。実際の公開状態と閲覧権限は Sites の結果を確認してください。Sites 用ファイルは GitHub Pages の配信には影響しません。
+Sites の本人用確認ページ：<https://taro-nagata-observatory.tarofractal.chatgpt.site>。2026年11月15日に本人だけが閲覧できる設定で配信成功を確認しました。Sites 用ファイルは GitHub Pages の配信には影響しません。ブラウザによる表示確認は環境上の制限により未実施です。
 
 `taronagata.com` はまだ購入していません。次のステップはドメイン管理サービスで空き状況と料金を確認して取得し、[設定ガイド](docs/DOMAIN-SETUP.ja.md) に沿って接続することです。
+
+## 検証
+
+```sh
+python3 scripts/check-site.py
+node --check dist/app.js
+```
+
+ローカルのリンク、アンカー、CSS素材、日英テキスト、PDF・図の形式と JavaScript 構文を確認できます。
 
 ## 出典と権利
 
