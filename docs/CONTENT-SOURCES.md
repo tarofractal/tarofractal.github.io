@@ -38,3 +38,11 @@ DiffHydro、Kavli IPMU、NAOJ、SpaceData、EAS 等の所属・活動の説明�
 - `dist/assets/cloud-stability-figure9.png` は、上記論文の出版社版 PDF 10 ページ目から Figure 9 を切り抜いた画像です（1578 × 663 px）。出版社版 1 ページ目で確認した [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) に基づき掲載しています。サイト上に著者、論文題名、The Astrophysical Journal、DOI、ライセンスへのリンクと切り抜きの説明を表示しています。出典：Taro M. Shefferson-Nagata & Kazumasa Ohno, “Radiatively Controlled Thermal Stability of High-Altitude Clouds in Exoplanetary Atmospheres,” The Astrophysical Journal 1005(2), 210 (2026), [doi:10.3847/1538-4357/ae7d27](https://doi.org/10.3847/1538-4357/ae7d27)。
 - ヒーローの惑星・軌道の canvas と制作物の概念図は、このサイト用のオリジナルの模式表現です。Figure 9 とは区別し、SpaceData の実データや研究の観測結果としては表示していません。
 - GitHub 上で公開されていることだけを理由に、他のリポジトリのソースへ再配布ライセンスを付与しません。このサイト全体のコード公開に適用するライセンスも、素材のライセンスとは区別して決めてください。
+
+## プロジェクトの公式ロゴと追加説明
+
+- NOBILVA：[公式サイト](https://nobilvalrn.studio.site/) のロゴを識別用に無改変で掲載。AI開発、17人、150人以上、5,000件以上の対話、期間は本人提供CVに基づきます。
+- Thy & I：[公式サイト](https://thy-and-i.com/) の羽ペンとワードマークを識別用に無改変で掲載。共同創業・ウェブサイト・予約・決済・90分3回のプログラム設計は既存本人サイト、公式サービスの支援内容は公式サイトを参照。
+- 個別の画像出典URLと寸法は [brand-assets.json](brand-assets.json) に保存しています。ロゴに新たなオープンソースライセンスは付けていません。
+- Tモノグラムはこの個人サイト用に作成しました。トップの模式的軌道図と出版論文の実際のFigure 9を区別して表示しています。
+- Space Weather Projectは表示上の名称です。既存の公開リポジトリと公開アプリのURLはそのまま参照しています。公開ラボのモデルとSpaceDataでの業務は詳細ページ内で区別しています。

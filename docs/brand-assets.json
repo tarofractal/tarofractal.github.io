@@ -1,0 +1,41 @@
+{
+  "assets": [
+    {
+      "project": "NOBILVA",
+      "official_site": "https://nobilvalrn.studio.site/",
+      "path": "assets/brands/nobilva-social.png",
+      "role": "official logo and wordmark social image",
+      "source_url": "https://storage.googleapis.com/production-os-assets/assets/dffd17e9-b183-4412-af78-349127fde8dd",
+      "discovered_at": "official site og:image metadata",
+      "width": 1890,
+      "height": 591,
+      "bytes": 71744,
+      "unmodified": true
+    },
+    {
+      "project": "Thy & I",
+      "official_site": "https://thy-and-i.com/",
+      "path": "assets/brands/thy-and-i-logo.png",
+      "role": "official horizontal logo and wordmark",
+      "source_url": "https://thy-and-i.com/wp-content/uploads/2026/05/28-背景投下-e1779416474295.png",
+      "discovered_at": "official page loader_logo_image .pc image",
+      "width": 1080,
+      "height": 563,
+      "bytes": 61113,
+      "unmodified": true
+    }
+  ],
+  "identity_verification": {
+    "NOBILVA": "Official site is a 17-member student learning-support organization. The team member たろう is described as studying astronomy/physics/mathematics and participating in NAOJ exoplanet research, matching Taro and his supplied CV. Older CV confirms Meikei Gakuen, whose students run local NOBILVA support events. Search result Nectere/Nobilva and Reha Studio NOBILVA are different organizations; do not use those logos.",
+    "Thy & I": "Official site lists 永田 多朗, Princeton, Astrophysics / Mathematics, matching authenticated identity and supplied materials."
+  },
+  "display_notes": {
+    "NOBILVA": "Use nobilva-social.png for the detail page brand panel. Cyan field with cream/yellow wordmark, keep natural aspect ratio. Do not treat historical high school bios as current roles.",
+    "Thy & I": "Use thy-and-i-logo.png on a dark navy panel because the wordmark is white. Feather mark is an optional secondary icon. Preserve natural aspect ratio and do not recolor."
+  },
+  "source_content_summary": {
+    "NOBILVA": "Student-led learning support, question answering and science/learning events. The site explains curiosity and an environment where students can grow. AI implementation, 150+ students, 5000+ interactions and founder contribution should remain sourced to supplied current CV.",
+    "Thy & I": "Overseas admissions advising. Current official site covers self-reflection and goals, extracurricular activity planning and execution, application essays/scholarships, and a student community. Taro website/booking/payment implementation and co-founder role are sourced to his previous personal site."
+  },
+  "brand_rights_note": "Official public brand assets reused only to identify the user’s own projects as explicitly requested. No new open-source license is assigned to those logos."
+}

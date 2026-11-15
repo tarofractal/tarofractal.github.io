@@ -1,0 +1,645 @@
+{
+  "research": {
+    "kicker": {
+      "en": "RESEARCH / EXOPLANET ATMOSPHERES",
+      "ja": "研究 / 系外惑星大気"
+    },
+    "title": {
+      "en": "When can an exoplanet cloud survive?",
+      "ja": "系外惑星の雲は、いつ生き残れるか。"
+    },
+    "subtitle": {
+      "en": "Cloud particles do not always share the temperature of the surrounding gas. I model how light, composition, and particle size determine whether they remain stable.",
+      "ja": "雲の粒子の温度は、周囲の気体と同じとは限りません。光、組成、粒径が粒子の温度をどう決め、雲の安定性をどう変えるかを調べています。"
+    },
+    "facts": [
+      {
+        "label": {
+          "en": "ROLE",
+          "ja": "担当"
+        },
+        "value": {
+          "en": "First author · numerical modeling and analysis",
+          "ja": "第一著者 · 数値モデルと解析"
+        }
+      },
+      {
+        "label": {
+          "en": "RESEARCH",
+          "ja": "研究先"
+        },
+        "value": {
+          "en": "NAOJ · Jan 2025–Aug 2026",
+          "ja": "国立天文台 · 2025年1月–2026年8月"
+        }
+      },
+      {
+        "label": {
+          "en": "COLLABORATOR",
+          "ja": "共同研究者"
+        },
+        "value": {
+          "en": "Kazumasa Ohno",
+          "ja": "大野和正"
+        }
+      },
+      {
+        "label": {
+          "en": "PUBLICATION",
+          "ja": "掲載誌"
+        },
+        "value": {
+          "en": "The Astrophysical Journal 1005, 210 (2026)",
+          "ja": "The Astrophysical Journal 1005, 210 (2026)"
+        }
+      },
+      {
+        "label": {
+          "en": "METHODS",
+          "ja": "手法"
+        },
+        "value": {
+          "en": "Python · Mie theory · radiative equilibrium",
+          "ja": "Python · Mie理論 · 放射平衡"
+        }
+      }
+    ],
+    "sections": [
+      {
+        "heading": {
+          "en": "The question: which temperature matters?",
+          "ja": "問い：雲の安定性を決めるのは、どの温度か。"
+        },
+        "paragraphs": [
+          {
+            "en": "Cloud composition is often inferred by comparing the local gas temperature with a material’s condensation temperature. In a tenuous upper atmosphere, however, collisions with gas molecules become too infrequent to keep a cloud particle at the same temperature as its surroundings.",
+            "ja": "雲の組成を推定するとき、よく使われるのは気体の温度と物質の凝縮温度の比較です。しかし希薄な上層大気では、気体分子との衝突だけでは雲の粒子と周囲の温度をそろえられなくなります。"
+          },
+          {
+            "en": "The particle then finds its own temperature through the balance of absorbed starlight and emitted infrared radiation. The central question is whether a candidate cloud material can stay cool enough to survive under that balance.",
+            "ja": "このとき粒子自身の温度は、星の光を吸収する加熱と、赤外線を放射する冷却の釣り合いで決まります。その釣り合いのもとで、雲になる物質が昇華せず存在できるか。それが研究の中心となる問いです。"
+          }
+        ]
+      },
+      {
+        "heading": {
+          "en": "From optical properties to particle temperature",
+          "ja": "光学特性から、粒子の温度を求める。"
+        },
+        "paragraphs": [
+          {
+            "en": "The model uses wavelength-dependent absorption efficiencies calculated with Mie theory for eight condensates: KCl, ZnS, Na₂S, MnS, SiO₂, Mg₂SiO₄, Fe, and Al₂O₃. Different materials absorb stellar light and emit thermal radiation with very different efficiencies.",
+            "ja": "KCl、ZnS、Na₂S、MnS、SiO₂、Mg₂SiO₄、Fe、Al₂O₃の8種類の凝縮物について、Mie理論で波長ごとの吸収効率を求めます。物質によって、星の光を吸収する効率と熱放射の効率は大きく異なります。"
+          },
+          {
+            "en": "In the low-pressure limit, the radiative balance can be written as ∫ C_abs(λ) F_λ dλ = 4π ∫ C_abs(λ) B_λ(T_p) dλ. Here C_abs is the absorption cross section, F_λ is incident spectral flux, and B_λ is the Planck function at the particle temperature T_p.",
+            "ja": "低圧極限での放射平衡は、∫ C_abs(λ) F_λ dλ = 4π ∫ C_abs(λ) B_λ(T_p) dλ と表せます。C_absは吸収断面積、F_λは入射する波長別フラックス、B_λは粒子温度T_pでのプランク関数です。"
+          },
+          {
+            "en": "For the pressure-dependent calculation, gas–particle collisions are included as an additional exchange of energy. This connects the radiative limit high in the atmosphere to the regime where particles more closely follow the gas temperature.",
+            "ja": "圧力に応じた温度構造を求める計算では、気体と粒子の衝突によるエネルギー交換も加えます。これにより、大気上層の放射が支配的な状態から、粒子温度が気体温度に近づく状態までをつなぎます。"
+          }
+        ]
+      },
+      {
+        "heading": {
+          "en": "My numerical workflow",
+          "ja": "数値計算で取り組んだこと。"
+        },
+        "paragraphs": [
+          {
+            "en": "I implemented absorption calculations, integrated wavelength-dependent heating and cooling, and solved for the particle temperature. The published calculation uses trapezoidal integration and a bisection search for the equilibrium temperature.",
+            "ja": "吸収の計算を実装し、波長ごとの加熱と冷却を積分して粒子温度を求めました。論文の計算では台形則による積分と、平衡温度を求める二分法を用いています。"
+          },
+          {
+            "en": "Parameter sweeps vary material, particle size, stellar spectrum, and irradiation. Comparing the resulting temperature with each material’s condensation temperature produces stability boundaries. I analyzed these sweeps and led the first-author paper.",
+            "ja": "物質、粒径、恒星スペクトル、照射条件を変えてパラメータを走査します。得られた温度を各物質の凝縮温度と比較し、安定性の境界を調べました。数値解析と結果の整理を進め、第一著者論文につなげました。"
+          }
+        ],
+        "bullets": [
+          {
+            "en": "Absorption → spectral heating and cooling → equilibrium temperature → stability map.",
+            "ja": "吸収 → 波長別の加熱・冷却 → 平衡温度 → 安定性マップ。"
+          },
+          {
+            "en": "Python, NumPy, SciPy, pandas, and Matplotlib support the calculations and analysis.",
+            "ja": "Python、NumPy、SciPy、pandas、Matplotlibを計算と解析に使用。"
+          }
+        ]
+      },
+      {
+        "heading": {
+          "en": "What the model shows",
+          "ja": "モデルからわかったこと。"
+        },
+        "paragraphs": [
+          {
+            "en": "The results separate into composition-dependent temperature behaviors. Silicates such as SiO₂ and Mg₂SiO₄ can remain comparatively cool across a broad range of the conditions explored, while the sulfides ZnS, Na₂S, and MnS can be heated to sublimation even for temperate planets.",
+            "ja": "結果には、組成に応じた粒子温度の違いが現れます。SiO₂やMg₂SiO₄などのケイ酸塩は、調べた広い条件範囲で比較的低温を保つ一方、ZnS、Na₂S、MnSなどの硫化物は温暖な惑星でも昇華温度まで加熱されることがあります。"
+          },
+          {
+            "en": "WASP-17b and HD 189733b fall in the modeled stable regime for SiO₂ clouds, consistent with recent JWST observations. In the pressure-dependent WASP-17b calculation, Fe clouds are unstable on the dayside and Al₂O₃ clouds survive only in a limited region.",
+            "ja": "WASP-17bとHD 189733bは、モデル上でSiO₂の雲が安定な領域に入り、JWSTの観測と整合します。圧力に応じたWASP-17bの計算では、昼側のFeの雲は不安定で、Al₂O₃の雲が存在できる範囲も限られることが示されます。"
+          },
+          {
+            "en": "The practical implication is that a gas-temperature profile alone can allow cloud compositions that are unstable once the particle’s own radiative temperature is considered.",
+            "ja": "つまり、気体の温度だけなら存在できそうに見える雲でも、粒子自身の放射温度を考えると不安定になる場合があります。"
+          }
+        ]
+      },
+      {
+        "heading": {
+          "en": "Reading Figure 9",
+          "ja": "Figure 9 の読み方。"
+        },
+        "paragraphs": [
+          {
+            "en": "Figure 9 shows the particle-to-gas temperature ratio for SiO₂, Mg₂SiO₄, Fe, and Al₂O₃ in the WASP-17b calculation. The horizontal axis is particle radius and the vertical axis is atmospheric pressure.",
+            "ja": "Figure 9は、WASP-17bの計算におけるSiO₂、Mg₂SiO₄、Fe、Al₂O₃の粒子温度と気体温度の比を示しています。横軸は粒径、縦軸は大気圧です。"
+          },
+          {
+            "en": "Blue regions indicate particles cooler than the surrounding gas; red regions indicate hotter particles. Hatching marks regions where the particle temperature exceeds the condensation temperature. The contrast between panels makes the role of composition visible.",
+            "ja": "青い領域では粒子が気体より低温、赤い領域では高温です。斜線は粒子温度が凝縮温度を超える領域を示します。パネル間を比べると、組成の違いが安定性にどう影響するかがわかります。"
+          }
+        ]
+      },
+      {
+        "heading": {
+          "en": "Scope, publication, and public code",
+          "ja": "計算の範囲・論文・公開コード。"
+        },
+        "paragraphs": [
+          {
+            "en": "This is a radiative–thermodynamic stability model. The calculation uses idealized spherical particles and an approximate stellar spectrum; it does not self-consistently solve the feedback of clouds on the entire atmosphere. Optical constants, stellar ultraviolet radiation, and finite sublimation timescales are important directions for further work.",
+            "ja": "これは雲の放射・熱力学的な安定性を調べるモデルです。理想化した球形粒子や近似的な恒星スペクトルを用いており、雲が大気全体へ与えるフィードバックを自己整合的に解くものではありません。光学定数、恒星の紫外線、有限の昇華時間などは、さらに調べるべき課題です。"
+          },
+          {
+            "en": "Shefferson-Nagata, T. M., & Ohno, K. (2026). “Radiatively Controlled Thermal Stability of High-altitude Clouds in Exoplanetary Atmospheres.” The Astrophysical Journal, 1005, 210. DOI: 10.3847/1538-4357/ae7d27.",
+            "ja": "Shefferson-Nagata, T. M., & Ohno, K. (2026). “Radiatively Controlled Thermal Stability of High-altitude Clouds in Exoplanetary Atmospheres.” The Astrophysical Journal, 1005, 210. DOI: 10.3847/1538-4357/ae7d27。"
+          },
+          {
+            "en": "The linked GitHub repository is a partial reconstruction of research scripts. Some original input data have not been recovered, so it is not a complete package for reproducing every figure in the paper.",
+            "ja": "リンク先のGitHubリポジトリは、研究スクリプトの部分復元です。元の入力データの一部が未回収のため、論文のすべての図を再現する完全なパッケージではありません。"
+          }
+        ]
+      }
+    ],
+    "figure": {
+      "src": "assets/cloud-stability-figure9.png",
+      "width": 1578,
+      "height": 663,
+      "alt": {
+        "en": "Figure 9: particle-to-gas temperature ratios and cloud stability across particle radius and pressure for four condensates.",
+        "ja": "Figure 9：4種類の凝縮物について、粒径と大気圧に応じた粒子・気体温度比と雲の安定性を示す図。"
+      },
+      "credit": "Shefferson-Nagata & Ohno (2026), Radiatively Controlled Thermal Stability of High-altitude Clouds in Exoplanetary Atmospheres, The Astrophysical Journal 1005, 210, Fig. 9. CC BY 4.0. Figure cropped from the published page.",
+      "doi": "https://doi.org/10.3847/1538-4357/ae7d27",
+      "license": "https://creativecommons.org/licenses/by/4.0/"
+    },
+    "links": [
+      {
+        "href": "https://doi.org/10.3847/1538-4357/ae7d27",
+        "label": {
+          "en": "Read the paper",
+          "ja": "論文を読む"
+        }
+      },
+      {
+        "href": "https://arxiv.org/abs/2606.21770",
+        "label": {
+          "en": "arXiv",
+          "ja": "arXiv"
+        }
+      },
+      {
+        "href": "https://github.com/tarofractal/exoplanet-cloud-thermal-stability",
+        "label": {
+          "en": "Research scripts",
+          "ja": "研究スクリプト"
+        }
+      }
+    ]
+  },
+  "space-weather": {
+    "kicker": {
+      "en": "PROJECT / COMPUTATIONAL PHYSICS",
+      "ja": "プロジェクト / 計算物理"
+    },
+    "title": {
+      "en": "Space Weather Project",
+      "ja": "宇宙天気プロジェクト"
+    },
+    "subtitle": {
+      "en": "Connecting solar observations, propagation models, and historical events to make space weather easier to investigate.",
+      "ja": "太陽の観測、伝播モデル、過去のイベントをつなぎ、宇宙天気を調べるための環境をつくる。"
+    },
+    "facts": [
+      {
+        "label": {
+          "en": "FOCUS",
+          "ja": "テーマ"
+        },
+        "value": {
+          "en": "Solar activity · CME propagation · data exploration",
+          "ja": "太陽活動 · CME伝播 · データ探索"
+        }
+      },
+      {
+        "label": {
+          "en": "PUBLIC DATA",
+          "ja": "公開データ"
+        },
+        "value": {
+          "en": "NOAA · NASA DONKI · OMNI",
+          "ja": "NOAA · NASA DONKI · OMNI"
+        }
+      },
+      {
+        "label": {
+          "en": "MODEL",
+          "ja": "モデル"
+        },
+        "value": {
+          "en": "Constant-speed and drag-based propagation",
+          "ja": "等速モデル・抗力に基づく伝播モデル"
+        }
+      },
+      {
+        "label": {
+          "en": "RELATED EXPERIENCE",
+          "ja": "関連する活動"
+        },
+        "value": {
+          "en": "SpaceData · Sep 2026–present",
+          "ja": "SpaceData · 2026年9月–現在"
+        }
+      }
+    ],
+    "sections": [
+      {
+        "heading": {
+          "en": "A question that crosses several datasets",
+          "ja": "いくつものデータを横断する問い。"
+        },
+        "paragraphs": [
+          {
+            "en": "A solar eruption is observed near the Sun, while changes in solar wind and geomagnetic activity are measured at different locations and times. Investigating one event means aligning those views and keeping track of what each observation actually measures.",
+            "ja": "太陽での噴出と、太陽風や地磁気の変化は、異なる場所・時刻で観測されます。一つのイベントを理解するには、それぞれが何を測っているかを保ちながら、複数の観測を同じ時間軸で見ていく必要があります。"
+          },
+          {
+            "en": "The public project brings observations, event selection, propagation calculations, and research notes into one interface. It supports moving from “what happened?” to “which assumptions explain this result?”",
+            "ja": "公開プロジェクトでは、観測、イベントの選択、伝播計算、研究ノートを一つの画面につなげています。「何が起きたか」から、「どの仮定がこの結果につながるか」へ進むための環境です。"
+          }
+        ]
+      },
+      {
+        "heading": {
+          "en": "Observations with their context intact",
+          "ja": "観測の意味を保って、並べる。"
+        },
+        "paragraphs": [
+          {
+            "en": "The application combines NOAA solar-wind and magnetic-field products, Kp, GOES X-ray and proton data, and NASA DONKI event catalogs. A replay of 8–13 May 2024 connects the major storm’s solar-wind, magnetic, and geomagnetic records.",
+            "ja": "NOAAの太陽風・磁場、Kp、GOESのX線・陽子データ、NASA DONKIのイベントカタログを組み合わせています。2024年5月8〜13日の再生では、大規模な磁気嵐に伴う太陽風・磁場・地磁気の記録を見比べられます。"
+          },
+          {
+            "en": "Time conventions, data provenance, and missing values remain visible. For example, time-shifted OMNI data are handled without adding the L1 propagation delay a second time, and gaps are not silently replaced with zero.",
+            "ja": "時刻の基準、データの出典、欠測を見える形で扱います。たとえば、すでに時刻補正されたOMNIデータにはL1からの伝播時間を二重に加算せず、欠測を単純にゼロへ置き換えません。"
+          }
+        ]
+      },
+      {
+        "heading": {
+          "en": "From a CME to an arrival-time estimate",
+          "ja": "CMEから、到達時刻の推定へ。"
+        },
+        "paragraphs": [
+          {
+            "en": "The modeling view compares constant-speed propagation with an analytic Drag-Based Model. Adjusting the inputs makes the dependence on initial speed, background solar wind, and drag visible through arrival times and sensitivity analysis.",
+            "ja": "モデルの画面では、等速伝播と解析的なDrag-Based Modelを比較します。入力を変えることで、初速、背景太陽風、抗力が到達時刻にどう影響するかを感度解析とともに見られます。"
+          },
+          {
+            "en": "The 3D cone is a geometric representation built from event direction and angular width. It helps interpret the model, while the calculation itself is an analytic propagation estimate rather than a newly executed magnetohydrodynamic simulation.",
+            "ja": "3Dコーンは、イベントの方向や角幅からつくる幾何学的な表現です。モデルの理解を助ける可視化であり、計算自体は解析的な伝播推定です。新たに磁気流体シミュレーションを実行しているわけではありません。"
+          }
+        ]
+      },
+      {
+        "heading": {
+          "en": "Related work at SpaceData",
+          "ja": "SpaceDataでの関連する取り組み。"
+        },
+        "paragraphs": [
+          {
+            "en": "At SpaceData, I built a Python application that ingests real-time NASA data, estimates CME arrival times, provides aurora forecasts, and displays the previous two weeks of data. I am also developing physics-based and time-series machine-learning models to investigate satellite and communications impacts.",
+            "ja": "SpaceDataでは、NASAのリアルタイムデータを取り込み、CME到達時刻の推定、オーロラ予報、過去2週間の表示を行うPythonアプリを開発しました。衛星や通信への影響を調べる物理モデルや時系列機械学習モデルにも取り組んでいます。"
+          },
+          {
+            "en": "The public repository linked here is the separate space-weather lab described above. Its source and public-data demonstrations should not be read as a release of SpaceData’s internal software, datasets, or commercial systems.",
+            "ja": "ここでリンクしている公開リポジトリは、上で紹介した宇宙天気ラボです。公開データによる実装であり、SpaceDataの社内ソフトウェア、業務データ、商用システムの公開を示すものではありません。"
+          }
+        ]
+      },
+      {
+        "heading": {
+          "en": "Making the model inspectable",
+          "ja": "モデルを、確かめながら使えるように。"
+        },
+        "paragraphs": [
+          {
+            "en": "The public app includes data-quality views, model checks, and account-specific research notes with Markdown export. Science tests cover reference arrival times, numerical derivatives, limiting cases, units, timestamps, and missing observations.",
+            "ja": "公開アプリには、データ品質やモデル検算の画面、アカウントごとの研究ノートとMarkdown出力があります。科学計算のテストでは、基準となる到達時刻、数値微分、極限、単位、時刻、欠測の扱いを確認しています。"
+          },
+          {
+            "en": "These tools support exploration and comparison with observations. A modeled CME arrival time does not by itself determine the strength of a geomagnetic storm; the interface keeps the measured quantities and model assumptions distinct.",
+            "ja": "観測との比較や探索を支えるためのツールです。CMEの到達時刻を推定するだけで磁気嵐の強さが決まるわけではありません。測定している量と、計算に置いた仮定を区別して見られる構成にしています。"
+          }
+        ]
+      }
+    ],
+    "links": [
+      {
+        "href": "https://helios-space-weather-lab-taro.tarofractal.chatgpt.site/?view=overview",
+        "label": {
+          "en": "Open the project",
+          "ja": "プロジェクトを開く"
+        }
+      },
+      {
+        "href": "https://github.com/tarofractal/helios-space-weather-lab",
+        "label": {
+          "en": "Public source code",
+          "ja": "公開ソースコード"
+        }
+      }
+    ]
+  },
+  "nobilva": {
+    "kicker": {
+      "en": "PROJECT / AI & EDUCATION",
+      "ja": "プロジェクト / AIと教育"
+    },
+    "title": {
+      "en": "NOBILVA",
+      "ja": "NOBILVA"
+    },
+    "subtitle": {
+      "en": "Building an AI learning companion—and the team around it—for children facing barriers to attending school.",
+      "ja": "学校に通うことに困難を抱える子どもたちのために、AI学習支援と、それを支えるチームをつくる。"
+    },
+    "facts": [
+      {
+        "label": {
+          "en": "ROLE",
+          "ja": "担当"
+        },
+        "value": {
+          "en": "Founder & AI Product Developer",
+          "ja": "創業者・AIプロダクト開発"
+        }
+      },
+      {
+        "label": {
+          "en": "PERIOD",
+          "ja": "期間"
+        },
+        "value": {
+          "en": "Aug 2023–Mar 2026",
+          "ja": "2023年8月–2026年3月"
+        }
+      },
+      {
+        "label": {
+          "en": "TEAM",
+          "ja": "チーム"
+        },
+        "value": {
+          "en": "17 members",
+          "ja": "17人"
+        }
+      },
+      {
+        "label": {
+          "en": "REACH",
+          "ja": "活動規模"
+        },
+        "value": {
+          "en": "150+ students · 5,000+ interactions",
+          "ja": "150人以上の学習者 · 5,000件以上の対話"
+        }
+      }
+    ],
+    "sections": [
+      {
+        "heading": {
+          "en": "Learning support that starts with the learner",
+          "ja": "学ぶ人から、考える。"
+        },
+        "paragraphs": [
+          {
+            "en": "NOBILVA was an education organization I founded to support children facing barriers to attending school. The work combined an AI learning chatbot with the organization needed to bring that support to students across Japan.",
+            "ja": "NOBILVAは、学校に通うことに困難を抱える子どもたちの学びを支えるために立ち上げた教育団体です。AI学習チャットボットの開発と、その支援を日本全国へ届けるための組織づくりに取り組みました。"
+          },
+          {
+            "en": "The product served elementary and middle school learners. That shaped how I approached explanations: the responses needed to be appropriate for the student’s age and break the material into manageable steps.",
+            "ja": "対象は小学生・中学生です。年齢に合った説明にし、内容を一度に詰め込まず段階的に伝えることが、応答を設計するうえでの大切な課題でした。"
+          }
+        ]
+      },
+      {
+        "heading": {
+          "en": "Designing how the chatbot explains",
+          "ja": "チャットボットの「説明」を設計する。"
+        },
+        "paragraphs": [
+          {
+            "en": "I built the learning chatbot with Python and the OpenAI API. My work included engineering system prompts and response constraints for age-appropriate, step-by-step explanations.",
+            "ja": "PythonとOpenAI APIで学習チャットボットを開発しました。年齢に合った段階的な説明を行うため、システムプロンプトや応答の制約を設計しました。"
+          },
+          {
+            "en": "This work focused on the behavior of the learning experience: how the model should respond, how much it should explain at once, and how to make its answers useful for a younger learner. The chatbot supported more than 5,000 interactions.",
+            "ja": "学習体験としての応答をどうつくるかが中心でした。どのように答え、どの程度の内容を一度に説明し、子どもが理解を進められる形へ整えるかを考えました。チャットボットでは5,000件以上の対話が行われました。"
+          }
+        ]
+      },
+      {
+        "heading": {
+          "en": "Building the organization around the product",
+          "ja": "プロダクトを支える組織をつくる。"
+        },
+        "paragraphs": [
+          {
+            "en": "Alongside development, I led a 17-member team and helped the organization reach more than 150 students. The role connected product development with coordinating people and finding support for the organization.",
+            "ja": "開発と並行して17人のチームを率い、150人以上の学びを支えました。プロダクトづくりに加え、人をまとめ、活動を支える協力を得ることにも取り組みました。"
+          },
+          {
+            "en": "I secured government funding and promotional support. Those forms of support helped establish a foundation for the organization’s educational work.",
+            "ja": "政府の助成や広報面での支援を獲得しました。そうした支援も、団体として教育活動を進める基盤になりました。"
+          }
+        ]
+      },
+      {
+        "heading": {
+          "en": "Recognition and what I take forward",
+          "ja": "受賞と、その経験から。"
+        },
+        "paragraphs": [
+          {
+            "en": "NOBILVA received the national Grand Prize at the Japan AI Education Utilization Award, placing first among 477 teams.",
+            "ja": "NOBILVAは、日本AI教育活用アワードで全国477チーム中の最優秀賞を受賞しました。"
+          },
+          {
+            "en": "For me, the project brought software development and team leadership into the same problem: making a technical idea work for the people it is meant to support. I carry that connection into my later work on conversational AI and useful scientific software.",
+            "ja": "ソフトウェア開発とチーム運営が、同じ目的につながった経験でした。技術的なアイデアを、それが支える人にとって実際に役立つ形にする。この視点は、その後の会話AIや科学ソフトウェアの開発にもつながっています。"
+          }
+        ]
+      }
+    ],
+    "links": [
+      {
+        "href": "https://nobilvalrn.studio.site/",
+        "label": {
+          "en": "Official website",
+          "ja": "公式サイト"
+        }
+      },
+      {
+        "href": "mailto:tarofractal@gmail.com?subject=NOBILVA",
+        "label": {
+          "en": "Ask me about NOBILVA",
+          "ja": "NOBILVAについて連絡する"
+        }
+      }
+    ]
+  },
+  "thy-and-i": {
+    "kicker": {
+      "en": "PROJECT / EDUCATION & WEB DEVELOPMENT",
+      "ja": "プロジェクト / 教育とウェブ開発"
+    },
+    "title": {
+      "en": "Thy & I",
+      "ja": "Thy & I"
+    },
+    "subtitle": {
+      "en": "Co-founding an admissions advising service and building the website, booking, and payment systems behind it.",
+      "ja": "進学支援サービスを共同創業し、ウェブサイト・予約・決済の仕組みをつくる。"
+    },
+    "facts": [
+      {
+        "label": {
+          "en": "ROLE",
+          "ja": "担当"
+        },
+        "value": {
+          "en": "Co-founder · web development",
+          "ja": "共同創業・ウェブ開発"
+        }
+      },
+      {
+        "label": {
+          "en": "FOCUS",
+          "ja": "テーマ"
+        },
+        "value": {
+          "en": "University admissions advising",
+          "ja": "大学進学のアドバイジング"
+        }
+      },
+      {
+        "label": {
+          "en": "PROGRAM DESIGN",
+          "ja": "プログラム設計"
+        },
+        "value": {
+          "en": "Three personalized 90-minute sessions",
+          "ja": "個別の90分セッションを3回"
+        }
+      },
+      {
+        "label": {
+          "en": "CONTRIBUTION",
+          "ja": "主な取り組み"
+        },
+        "value": {
+          "en": "Website · booking · payments",
+          "ja": "ウェブサイト · 予約 · 決済"
+        }
+      }
+    ],
+    "sections": [
+      {
+        "heading": {
+          "en": "A service built around individual conversations",
+          "ja": "一人ひとりの対話を軸に。"
+        },
+        "paragraphs": [
+          {
+            "en": "Thy & I is a university-admissions advising service I co-founded. The program I helped design was structured around three personalized 90-minute sessions, giving the advising a defined structure while keeping each student’s circumstances at its center.",
+            "ja": "Thy & Iは、共同創業した大学進学のアドバイジングサービスです。設計に関わったプログラムは、個別の90分セッションを3回行う構成。一定の流れを設けながら、一人ひとりの状況に合わせた支援を目指しました。"
+          },
+          {
+            "en": "The official service describes support for self-reflection and goals, extracurricular activities, application essays and scholarships, and a student community. The website is the entry point to that support.",
+            "ja": "公式サービスでは、自己分析と目標づくり、課外活動、出願エッセイ・奨学金、学生コミュニティなどを案内しています。ウェブサイトは、そのサポートへの入口です。"
+          }
+        ]
+      },
+      {
+        "heading": {
+          "en": "From the service idea to a working website",
+          "ja": "サービスのアイデアを、使えるウェブへ。"
+        },
+        "paragraphs": [
+          {
+            "en": "I built the website and the web infrastructure for booking and payment. That work connected the public-facing explanation of the service with the practical steps needed to arrange and pay for an advising session.",
+            "ja": "ウェブサイトと、予約・決済のためのウェブ基盤を開発しました。サービスの内容を伝えるページから、実際にセッションを予約して支払うための仕組みまでをつなぐ仕事です。"
+          },
+          {
+            "en": "My contribution covered both the product’s presentation and its supporting systems. The website was part of how the service operated, alongside the advising itself.",
+            "ja": "サービスの見せ方と、それを支える仕組みの両方に関わりました。ウェブサイトも、アドバイジングとともにサービスを動かす一部としてつくっています。"
+          }
+        ]
+      },
+      {
+        "heading": {
+          "en": "Designing the program with the team",
+          "ja": "プログラムの設計にも関わる。"
+        },
+        "paragraphs": [
+          {
+            "en": "As a co-founder, I also helped design the advising program. Working on the service and the software together meant thinking about the structure of the sessions and how the booking and payment systems would support it.",
+            "ja": "共同創業者として、アドバイジングのプログラム設計にも関わりました。セッションの構成と、それを予約・決済の仕組みでどう支えるかを、サービスとソフトウェアの両側から考えています。"
+          }
+        ]
+      },
+      {
+        "heading": {
+          "en": "Connecting software with a real service",
+          "ja": "ソフトウェアを、サービスにつなげる。"
+        },
+        "paragraphs": [
+          {
+            "en": "Thy & I gave me experience building the operational side of a people-centered service. It connects my interest in education with the practical work of turning a concept into a website and a usable workflow.",
+            "ja": "人と関わるサービスを、運営面からもつくる経験になりました。教育への関心と、構想をウェブサイトや利用の流れへ落とし込む開発がつながったプロジェクトです。"
+          }
+        ]
+      }
+    ],
+    "links": [
+      {
+        "href": "https://thy-and-i.com/",
+        "label": {
+          "en": "Official website",
+          "ja": "公式サイト"
+        }
+      },
+      {
+        "href": "mailto:tarofractal@gmail.com?subject=Thy%20%26%20I",
+        "label": {
+          "en": "Ask me about Thy & I",
+          "ja": "Thy & Iについて連絡する"
+        }
+      }
+    ]
+  }
+}

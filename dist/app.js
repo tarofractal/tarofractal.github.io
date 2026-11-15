@@ -60,6 +60,9 @@
   function setLanguage(next) {
     locale = next;
     root.lang = locale;
+    const title = document.querySelector('title[data-en][data-ja]');
+    if (title) document.title = title.dataset[locale];
+    document.querySelectorAll('[data-alt-en][data-alt-ja]').forEach((element) => { element.alt = element.dataset[locale === 'ja' ? 'altJa' : 'altEn']; });
     document.querySelectorAll('[data-en][data-ja]').forEach((element) => {
       element.textContent = element.dataset[locale];
     });
@@ -73,7 +76,7 @@
     theme = next;
     root.dataset.theme = theme;
     const themeColor = document.querySelector('meta[name="theme-color"]');
-    if (themeColor) themeColor.content = theme === 'dark' ? '#1c2420' : '#f5f3ed';
+    if (themeColor) themeColor.content = theme === 'dark' ? '#080e1c' : '#ffffff';
     updateControls();
     savePreference('theme', theme);
     orbit?.refresh();

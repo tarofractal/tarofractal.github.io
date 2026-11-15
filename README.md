@@ -2,13 +2,19 @@
 
 Taro Nagata / 永田 多朗のパーソナルサイト。研究、制作物、関心、連絡先を紹介する、英語を主言語とした日英対応の静的ウェブサイトです。
 
-HTML・CSS・JavaScript のみで動作します。npm のインストールやビルドは不要です。
+白・青を基盤にした研究・技術中心のデザインで、昼夜テーマと日英切り替えに対応しています。HTML・CSS・JavaScript のみで動作し、npm のインストールは不要です。完成した静的ファイルは `dist/` にあります。
 
 ## ファイル
 
 | 場所 | 内容 |
 | --- | --- |
 | `dist/index.html` | 本文、プロフィール、作品、リンク、日英テキスト |
+| `dist/research.html` | 論文の問い・手法・結果・Figure 9・限界 |
+| `dist/space-weather.html` | Space Weather Project の観測とモデル |
+| `dist/nobilva.html` | NOBILVA のAI開発・活動・公式ロゴ |
+| `dist/thy-and-i.html` | Thy & I のサービス・ウェブ開発・公式ロゴ |
+| `content/details.json` | 詳細4ページの日英コンテンツ |
+| `scripts/render-detail-pages.py` | 詳細ページを生成するPythonスクリプト |
 | `dist/styles.css` | レイアウト、色、書体、レスポンシブ表示 |
 | `dist/app.js` | 日英切り替え、テーマ切り替え、動きの制御 |
 | `dist/assets/` | ローカル配信する書体、ライセンス、CV など |
@@ -28,7 +34,7 @@ python3 -m http.server 3000 --directory dist
 
 ## 内容を更新する
 
-`dist/index.html` の本文を編集します。`data-en` と `data-ja` が付いた要素は、両方の言語を更新してください。外部リンク、所属、年、数値も同時に確認します。CV を差し替える場合は `dist/assets/` 内の PDF と HTML のリンク先を一致させます。
+トップは `dist/index.html` の本文を編集します。詳細4ページは `content/details.json` を編集し、`python3 scripts/render-detail-pages.py` でHTMLを生成します。`data-en` と `data-ja` が付いた要素は、両方の言語を更新してください。外部リンク、所属、年、数値も同時に確認します。CV を差し替える場合は `dist/assets/` 内の PDF と HTML のリンク先を一致させます。
 
 動きを加えるときは、動きを減らす OS 設定とサイト内の停止操作を維持してください。公開前にスマートフォン幅、日英切り替え、昼夜テーマ、キーボード操作、連絡先・CV のリンクを確認します。
 
@@ -53,4 +59,4 @@ node --check dist/app.js
 
 ## 出典と権利
 
-本人から提供された最新版 CV、既存の公開プロフィール、公開研究リポジトリ、確認できた論文情報をもとにしています。論文 Figure 9 は CC BY 4.0 に基づき、切り抜きと出典を明記して掲載しています。書体の OFL ライセンスも素材と一緒に保存しています。詳しくは [出典一覧](docs/CONTENT-SOURCES.md) を参照してください。
+本人から提供された最新版 CV、既存の公開プロフィール、公開研究リポジトリ、確認できた論文情報をもとにしています。論文 Figure 9 は CC BY 4.0 に基づき、切り抜きと出典を明記して掲載しています。書体の OFL ライセンスも素材と一緒に保存しています。NOBILVAとThy & Iのロゴは本人の希望に沿って各公式サイトの配信素材を使用し、出典を `docs/brand-assets.json` に記録しています。Tモノグラムは本サイト用に作成したSVGです。詳しくは [出典一覧](docs/CONTENT-SOURCES.md) を参照してください。
