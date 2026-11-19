@@ -14,13 +14,20 @@
   const mix = (a, b, t) => a.map((value, i) => Math.round(value + (b[i] - value) * t));
   const rgba = (rgb, alpha = 1) => `rgba(${rgb.join(',')},${alpha})`;
   const scenes = [
-    { id: 'dragon', en: 'Dragon curve', ja: 'ドラゴン曲線', duration: 9600, levels: 12 },
-    { id: 'mandelbrot', en: 'Mandelbrot set', ja: 'マンデルブロ集合', duration: 9600, levels: 11 },
-    { id: 'menger', en: 'Menger sponge', ja: 'メンガーのスポンジ', duration: 10000, levels: 3 },
-    { id: 'koch', en: 'Koch curve', ja: 'コッホ曲線', duration: 8800, levels: 6 },
-    { id: 'sierpinski', en: 'Sierpiński gasket', ja: 'シェルピンスキーのギャスケット', duration: 9200, levels: 7 },
-    { id: 'fern', en: 'Barnsley fern', ja: 'バーンズリーのシダ', duration: 10000 },
-    { id: 'romanesco', en: 'Romanesco', ja: 'ロマネスコ', duration: 10800, levels: 3 }
+    { id: 'dragon', en: 'Dragon curve', ja: 'ドラゴン曲線', duration: 9600, colors: [[70,208,235],[142,125,255]] },
+    { id: 'mandelbrot', en: 'Mandelbrot set', ja: 'マンデルブロ集合', duration: 9600, colors: [[128,144,255],[79,225,225]] },
+    { id: 'menger', en: 'Menger sponge', ja: 'メンガーのスポンジ', duration: 10000, colors: [[80,176,255],[153,127,255]] },
+    { id: 'koch', en: 'Koch curve', ja: 'コッホ曲線', duration: 8800, colors: [[75,216,238],[108,139,255]] },
+    { id: 'sierpinski', en: 'Sierpiński gasket', ja: 'シェルピンスキーのギャスケット', duration: 9200, colors: [[170,137,255],[92,206,242]] },
+    { id: 'fern', en: 'Barnsley fern', ja: 'バーンズリーのシダ', duration: 10000, colors: [[67,215,179],[78,163,238]] },
+    { id: 'julia', en: 'Julia set', ja: 'ジュリア集合', duration: 9600, colors: [[175,130,250],[73,212,230]] },
+    { id: 'hilbert', en: 'Hilbert curve', ja: 'ヒルベルト曲線', duration: 9000, colors: [[92,174,255],[184,128,246]] },
+    { id: 'pythagoras', en: 'Pythagoras tree', ja: 'ピタゴラスの木', duration: 9800, colors: [[64,173,228],[82,226,181]] },
+    { id: 'levy', en: 'Lévy C curve', ja: 'レヴィC曲線', duration: 9400, colors: [[78,218,237],[146,132,255]] },
+    { id: 'burning-ship', en: 'Burning Ship fractal', ja: 'バーニングシップ・フラクタル', duration: 9600, colors: [[238,143,133],[161,118,246]] },
+    { id: 'vicsek', en: 'Vicsek fractal', ja: 'ヴィチェック・フラクタル', duration: 9000, colors: [[147,148,251],[82,205,231]] },
+    { id: 'newton', en: 'Newton fractal', ja: 'ニュートン・フラクタル', duration: 9800, colors: [[86,211,229],[173,133,254]] },
+    { id: 'cantor', en: 'Cantor dust', ja: 'カントールの塵', duration: 9000, colors: [[108,170,247],[185,134,239]] }
   ];
   const HOLD = 1400;
   const FADE = 650;
@@ -33,6 +40,7 @@
   let size = 0;
   let palette;
   let theme = '';
+  let paletteScene = '';
   let staticPreview = false;
   const sprites = new Map();
   const geometries = new Map();
@@ -40,16 +48,31 @@
 
   function usePalette() {
     theme = root.dataset.theme || 'light';
-    palette = theme === 'dark'
-      ? { ink: [129, 179, 255], base: [12, 21, 39] }
-      : { ink: [37, 99, 200], base: [245, 248, 253] };
+    const scene = scenes[sceneIndex];
+    const dark = theme === 'dark';
+    paletteScene = scene.id;
+    palette = {
+      ink: dark ? scene.colors[0] : mix(scene.colors[0], [18,47,104], .38),
+      tip: dark ? scene.colors[1] : mix(scene.colors[1], [27,44,112], .32),
+      base: dark ? [12,21,39] : [245,248,253]
+    };
+    hero.style.setProperty('--fractal-ink', rgba(palette.ink));
+    hero.style.setProperty('--fractal-tip', rgba(palette.tip));
     sprites.clear();
     fillColors.clear();
   }
 
   function shaded(shade) {
-    if (!fillColors.has(shade)) fillColors.set(shade, rgba(mix(palette.base, palette.ink, shade)));
+    if (!fillColors.has(shade)) fillColors.set(shade, rgba(mix(palette.base, mix(palette.ink, palette.tip, 1 - shade), shade)));
     return fillColors.get(shade);
+  }
+
+  function spectrum(ctx, alpha = 1) {
+    const gradient = ctx.createLinearGradient(-.8, .8, .8, -.8);
+    gradient.addColorStop(0, rgba(palette.ink, alpha));
+    gradient.addColorStop(.55, rgba(mix(palette.ink, palette.tip, .46), alpha));
+    gradient.addColorStop(1, rgba(palette.tip, alpha));
+    return gradient;
   }
 
   function surface() {
@@ -87,17 +110,39 @@
 
   function curveStages(kind) {
     if (geometries.has(kind)) return geometries.get(kind);
+    if (kind === 'hilbert') {
+      const stages = [];
+      for (let order = 1; order <= 6; order += 1) {
+        const n = 2 ** order, points = [];
+        for (let distance = 0; distance < n*n; distance += 1) {
+          let x = 0, y = 0, t = distance;
+          for (let scale = 1; scale < n; scale *= 2) {
+            const rx = 1 & Math.floor(t / 2), ry = 1 & (t ^ rx);
+            if (ry === 0) {
+              if (rx === 1) { x = scale - 1 - x; y = scale - 1 - y; }
+              [x,y] = [y,x];
+            }
+            x += scale*rx; y += scale*ry; t = Math.floor(t/4);
+          }
+          points.push([x/(n-1), y/(n-1)]);
+        }
+        stages.push(points);
+      }
+      const result = normalizeStages(stages);
+      geometries.set(kind, result);
+      return result;
+    }
     const stages = [[[0, 0], [1, 0]]];
-    const count = kind === 'dragon' ? 12 : 6;
+    const count = kind === 'koch' ? 6 : 12;
     for (let level = 0; level < count; level += 1) {
       const old = stages[level];
       const next = [old[0]];
       for (let i = 0; i < old.length - 1; i += 1) {
         const a = old[i], b = old[i + 1];
         const dx = b[0] - a[0], dy = b[1] - a[1];
-        if (kind === 'dragon') {
-          // Alternating right-angle folds give the Heighway dragon.
-          const sign = i % 2 ? -1 : 1;
+        if (kind === 'dragon' || kind === 'levy') {
+          // Alternating folds form the dragon; equal turns form the Lévy C curve.
+          const sign = kind === 'dragon' && i % 2 ? -1 : 1;
           next.push([(a[0] + b[0] + sign * dy) / 2, (a[1] + b[1] - sign * dx) / 2]);
         } else {
           next.push([a[0] + dx / 3, a[1] + dy / 3]);
@@ -128,59 +173,84 @@
       return [ox + (x - ox) * t, oy + (y - oy) * t];
     });
     path(context, points);
-    context.strokeStyle = rgba(palette.ink, .87);
+    context.strokeStyle = spectrum(context, .95);
     context.lineWidth = Math.max(1.2, size / 650) * 2 / size;
     context.stroke();
   }
 
-  const mandelbrotLimits = [2, 3, 4, 6, 9, 14, 22, 35, 56, 90, 145, 233];
-  function mandelbrotData() {
-    if (geometries.has('mandelbrot')) return geometries.get('mandelbrot');
+  const escapeLimits = [2,3,4,6,9,14,22,35,56,90,145,233];
+  const newtonLimits = [1,2,3,4,5,7,10,14,20,28,38,52];
+  function escapeData(kind) {
+    if (geometries.has(kind)) return geometries.get(kind);
     const width = 420, height = 336;
-    const escapes = new Uint16Array(width * height);
-    for (let y = 0; y < height; y += 1) {
-      const ci = (y / (height - 1) - .5) * 2.8;
-      for (let x = 0; x < width; x += 1) {
-        const cr = -2.5 + x / (width - 1) * 3.5;
-        let zr = 0, zi = 0, n = 0;
-        while (zr * zr + zi * zi <= 4 && n < 234) {
-          const next = zr * zr - zi * zi + cr;
-          zi = 2 * zr * zi + ci;
-          zr = next;
-          n += 1;
-        }
-        escapes[y * width + x] = n;
+    const escapes = new Uint16Array(width*height), roots = new Uint8Array(width*height);
+    for (let y = 0; y < height; y += 1) for (let x = 0; x < width; x += 1) {
+      let cr = -2.5 + x/(width-1)*3.5, ci = (y/(height-1)-.5)*2.8;
+      let zr = 0, zi = 0, n = 0, basin = 0;
+      if (kind === 'julia') {
+        zr = (x/(width-1)-.5)*3.5; zi = ci; cr = -.8; ci = .156;
+      } else if (kind === 'burning-ship') {
+        cr = -2.2 + x/(width-1)*3.3; ci = 1 - y/(height-1)*2.85;
+      } else if (kind === 'newton') {
+        zr = (x/(width-1)-.5)*4.3; zi = (y/(height-1)-.5)*3.44;
       }
+      if (kind === 'newton') {
+        n = 53;
+        for (let step = 1; step <= 52; step += 1) {
+          const rr = zr*zr - zi*zi, ii = 2*zr*zi, denominator = 3*(rr*rr + ii*ii);
+          if (denominator < 1e-20) break;
+          zr = zr*2/3 + rr/denominator; zi = zi*2/3 - ii/denominator;
+          const distances = [(zr-1)**2 + zi*zi, (zr+.5)**2 + (zi-Math.sqrt(3)/2)**2, (zr+.5)**2 + (zi+Math.sqrt(3)/2)**2];
+          const nearest = Math.min(...distances);
+          if (nearest < 1e-8) { n = step; basin = distances.indexOf(nearest); break; }
+        }
+      } else {
+        while (zr*zr + zi*zi <= 4 && n < 234) {
+          if (kind === 'burning-ship') { zr = Math.abs(zr); zi = Math.abs(zi); }
+          const next = zr*zr - zi*zi + cr;
+          zi = 2*zr*zi + ci; zr = next; n += 1;
+        }
+      }
+      escapes[y*width+x] = n; roots[y*width+x] = basin;
     }
-    const result = { width, height, escapes };
-    geometries.set('mandelbrot', result);
+    const result = { width, height, escapes, roots };
+    geometries.set(kind, result);
     return result;
   }
 
-  function mandelbrotSprite(level) {
-    const key = `mandelbrot-${level}`;
+  function escapeSprite(kind, level) {
+    const key = `${kind}-${level}`;
     if (sprites.has(key)) return sprites.get(key);
-    const { width, height, escapes } = mandelbrotData();
+    const { width, height, escapes, roots } = escapeData(kind);
     const image = document.createElement('canvas');
     image.width = width; image.height = height;
-    const ctx = image.getContext('2d');
-    const pixels = ctx.createImageData(width, height);
-    const limit = mandelbrotLimits[level];
-    const insideColor = mix(palette.ink, [80, 184, 209], .08);
-    const outsideColor = mix(palette.ink, [80, 184, 209], .35);
-    escapes.forEach((escape, i) => {
-      const inside = escape > limit;
-      const x = i % width, y = Math.floor(i / width);
-      const edge = smooth(Math.min(x, width - 1 - x, y, height - 1 - y) / 28);
-      const alpha = inside ? .76 : escape <= 2 ? 0 : Math.min(.46, .045 + Math.sqrt(escape) * .032);
-      const color = inside ? insideColor : outsideColor;
-      pixels.data[i * 4] = color[0];
-      pixels.data[i * 4 + 1] = color[1];
-      pixels.data[i * 4 + 2] = color[2];
-      pixels.data[i * 4 + 3] = Math.round(255 * alpha * edge);
+    const ctx = image.getContext('2d'), pixels = ctx.createImageData(width,height);
+    const limit = (kind === 'newton' ? newtonLimits : escapeLimits)[level];
+    const bands = Array.from({length:235}, (_,n) => {
+      const wave = .5 + .5*Math.cos(Math.log(n+1)*4.5);
+      return { color:mix(palette.ink,palette.tip,.5+.5*Math.sin(Math.log(n+1)*2.2)), alpha:.1+.34*wave };
     });
-    ctx.putImageData(pixels, 0, 0);
-    sprites.set(key, image);
+    const blue = theme === 'dark' ? [103,155,255] : [61,106,187];
+    const basinColors = [palette.ink,palette.tip,blue];
+    for (let i = 0; i < escapes.length; i += 1) {
+      const escape = escapes[i], x = i%width, y = Math.floor(i/width);
+      let edge = smooth(Math.min(x,width-1-x,y,height-1-y)/32);
+      let color, alpha;
+      if (kind === 'newton') {
+        color = basinColors[roots[i]];
+        alpha = escape <= limit ? .42 + .2*Math.cos(escape*.9)**2 : 0;
+        edge *= smooth((1.1-Math.hypot((x/width-.5)*2,(y/height-.5)*2))/.24);
+      } else {
+        const inside = escape > limit;
+        color = inside ? mix(palette.ink,palette.tip,.35) : bands[escape].color;
+        alpha = inside ? .32 : escape <= 2 ? 0 : bands[escape].alpha;
+      }
+      const j = i*4;
+      pixels.data[j] = color[0]; pixels.data[j+1] = color[1]; pixels.data[j+2] = color[2];
+      pixels.data[j+3] = Math.round(255*alpha*edge);
+    }
+    ctx.putImageData(pixels,0,0);
+    sprites.set(key,image);
     return image;
   }
 
@@ -263,7 +333,7 @@
     const { outer, holes } = gasketGeometry();
     path(context, outer, true);
     context.fillStyle = rgba(palette.ink, .28); context.fill();
-    context.strokeStyle = rgba(palette.ink, .78);
+    context.strokeStyle = spectrum(context,.85);
     context.lineWidth = 2.2 / size; context.stroke();
     const position = progress * 7;
     holes.forEach(({ points, center, depth }) => {
@@ -276,7 +346,7 @@
       context.fillStyle = '#000';
       context.globalAlpha = 1; context.fill(); context.globalAlpha = alpha;
       context.globalCompositeOperation = 'source-over';
-      context.strokeStyle = rgba(palette.ink, .73);
+      context.strokeStyle = spectrum(context,.8);
       context.lineWidth = 1.35 / size; context.stroke();
     });
   }
@@ -308,78 +378,73 @@
       sprites.set('fern', cache);
     }
     const ctx = unitContext(cache.image), points = fernPoints();
-    ctx.fillStyle = rgba(palette.ink, .62);
+    ctx.fillStyle = spectrum(ctx,.72);
     const dot = 1.9 / size;
     for (let i = cache.count; i < target; i += 1) ctx.fillRect(points[i*2], points[i*2+1], dot, dot);
     cache.count = target;
     context.drawImage(cache.image, -1, -1, 2, 2);
   }
 
-  function romanescoGeometry() {
-    if (geometries.has('romanesco')) return geometries.get('romanesco');
-    // A botanical model: self-similar conical florets in golden-angle spirals.
-    const cones = [], goldenAngle = Math.PI * (3 - Math.sqrt(5));
-    function cone(base, height, radius, depth, phase, birth) {
-      const lean = depth ? .24 : 0;
-      const direction = [lean * Math.cos(phase), 1, lean * Math.sin(phase)];
-      const center = project(base);
-      const faces = [];
-      const sides = depth === 3 ? 8 : 14, rings = depth === 3 ? 2 : 4;
-      function floretPoint(t, angle) {
-        const r = radius * Math.pow(1 - t, 1.05) * (1 + .35 * Math.sin(Math.PI * t));
-        return project([base[0] + direction[0]*height*t + Math.cos(angle)*r, base[1] + height*t, base[2] + direction[2]*height*t + Math.sin(angle)*r]);
-      }
-      for (let ring = 0; ring < rings; ring += 1) for (let i = 0; i < sides; i += 1) {
-        const a = i / sides * Math.PI * 2, b = (i + 1) / sides * Math.PI * 2;
-        const normal = Math.cos((a+b)/2) + Math.sin((a+b)/2) + radius / height;
-        if (normal < 0) continue;
-        const polygon = new Path2D();
-        [floretPoint(ring/rings, a), floretPoint(ring/rings, b), floretPoint((ring+1)/rings, b), floretPoint((ring+1)/rings, a)].forEach(([x,y], j) => j ? polygon.lineTo(x,y) : polygon.moveTo(x,y));
-        polygon.closePath();
-        faces.push({ polygon, shade: .2 + .3 * clamp(normal / 2) + ring / rings * .04 });
-      }
-      cones.push({ center, faces, birth, depth: base[0] + base[2] + base[1] * .8 + height * .25 });
-      if (depth === 3) return;
-      const count = [21, 8, 4][depth];
-      for (let i = 0; i < count; i += 1) {
-        const u = .15 + .79 * (i + .5) / count, angle = phase + i * goldenAngle;
-        const r = radius * u;
-        const child = [base[0] + Math.cos(angle)*r, base[1] + height*(1-u), base[2] + Math.sin(angle)*r];
-        cone(child, height * .36 * (.55 + .45*u), radius * .33 * (.45 + .55*u), depth + 1, angle, depth + .58 + i / count * .42);
-      }
+  function squareGeometry(kind, level) {
+    const key = `${kind}-${level}`;
+    if (geometries.has(key)) return geometries.get(key);
+    let squares = [[-.9,-.9,1.8]];
+    const positions = kind === 'cantor' ? [[0,0],[2,0],[0,2],[2,2]] : [[1,0],[0,1],[1,1],[2,1],[1,2]];
+    for (let step = 0; step < level; step += 1) {
+      squares = squares.flatMap(([x,y,side]) => positions.map(([a,b]) => [x+a*side/3,y+b*side/3,side/3]));
     }
-    cone([0,-.67,0], 1.55, .78, 0, .2, -.2);
-    cones.sort((a,b) => a.depth - b.depth);
-    geometries.set('romanesco', cones);
-    return cones;
+    geometries.set(key,squares);
+    return squares;
   }
 
-  function drawRomanesco(progress) {
-    const position = progress * 3.6;
-    context.save();
-    context.scale(.74, .74);
-    context.lineWidth = .75 / size;
-    romanescoGeometry().forEach(({ center, faces, birth }) => {
-      const scale = smooth((position - birth) / .55);
-      if (!scale) return;
-      context.save();
-      context.translate(center[0], center[1]);
-      context.scale(scale, scale);
-      context.translate(-center[0], -center[1]);
-      faces.forEach(({ polygon, shade }) => {
-        context.fillStyle = shaded(shade);
-        context.fill(polygon);
-        context.strokeStyle = rgba(palette.ink, .13);
-        context.stroke(polygon);
-      });
-      context.restore();
+  function squareSprite(kind, level) {
+    const key = `${kind}-${level}`;
+    if (sprites.has(key)) return sprites.get(key);
+    const image = surface(), ctx = unitContext(image);
+    ctx.fillStyle = spectrum(ctx,.25);
+    ctx.strokeStyle = spectrum(ctx,.83);
+    ctx.lineWidth = 1.4/size;
+    squareGeometry(kind,level).forEach(([x,y,side]) => {
+      ctx.fillRect(x,y,side,side); ctx.strokeRect(x,y,side,side);
     });
-    context.restore();
+    sprites.set(key,image);
+    return image;
+  }
+
+  function treeGeometry() {
+    if (geometries.has('pythagoras')) return geometries.get('pythagoras');
+    const squares = [];
+    function branch(a,b,depth) {
+      const dx = b[0]-a[0], dy = b[1]-a[1];
+      const c = [b[0]+dy,b[1]-dx], d = [a[0]+dy,a[1]-dx];
+      const peak = [(c[0]+d[0]+dy)/2,(c[1]+d[1]-dx)/2];
+      squares.push({points:[a,b,c,d],depth});
+      if (depth < 10) { branch(d,peak,depth+1); branch(peak,c,depth+1); }
+    }
+    branch([-.12,.9],[.12,.9],0);
+    const normalized = normalizeStages(squares.map(square=>square.points));
+    const result = squares.map((square,i)=>({...square,points:normalized[i]}));
+    geometries.set('pythagoras',result);
+    return result;
+  }
+
+  function drawTree(progress) {
+    const position = progress*11;
+    treeGeometry().forEach(({points,depth}) => {
+      const growth = smooth((position-depth)/.85);
+      if (!growth) return;
+      const center = [(points[0][0]+points[1][0])/2,(points[0][1]+points[1][1])/2];
+      path(context,points.map(([x,y])=>[center[0]+(x-center[0])*growth,center[1]+(y-center[1])*growth]),true);
+      const color = mix(palette.ink,palette.tip,depth/10);
+      context.fillStyle = rgba(color,.13); context.fill();
+      context.strokeStyle = rgba(color,.83); context.lineWidth = 1.8/size; context.stroke();
+    });
   }
 
   function paint(progressOverride) {
     if (!size) return;
     const scene = scenes[sceneIndex];
+    if (paletteScene !== scene.id) usePalette();
     const progress = progressOverride ?? clamp(elapsed / scene.duration);
     const fade = Math.min(smooth(elapsed / FADE), 1 - smooth((elapsed - scene.duration - HOLD) / FADE));
     context.setTransform(1, 0, 0, 1, 0, 0);
@@ -387,12 +452,13 @@
     context.setTransform(size / 2, 0, 0, size / 2, size / 2, size / 2);
     context.lineCap = context.lineJoin = 'round';
     context.globalAlpha = progressOverride === undefined ? fade : 1;
-    if (scene.id === 'dragon' || scene.id === 'koch') drawCurve(scene.id, progress);
-    else if (scene.id === 'mandelbrot') drawRefinement(progress, 11, mandelbrotSprite, .8);
+    if (['dragon','koch','hilbert','levy'].includes(scene.id)) drawCurve(scene.id,progress);
+    else if (['mandelbrot','julia','burning-ship','newton'].includes(scene.id)) drawRefinement(progress,11,level=>escapeSprite(scene.id,level),.8);
     else if (scene.id === 'menger') drawRefinement(progress, 3, mengerSprite);
     else if (scene.id === 'sierpinski') drawGasket(progress);
     else if (scene.id === 'fern') drawFern(progress);
-    else drawRomanesco(progress);
+    else if (scene.id === 'pythagoras') drawTree(progress);
+    else if (scene.id === 'vicsek' || scene.id === 'cantor') drawRefinement(progress,5,level=>squareSprite(scene.id,level));
     context.globalAlpha = 1;
     canvas.dataset.fractal = scene.id;
     canvas.dataset.progress = progress.toFixed(3);
