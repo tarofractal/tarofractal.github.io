@@ -36,7 +36,7 @@ DiffHydro、Kavli IPMU、NAOJ、SpaceData、EAS 等の所属・活動の説明�
 - 書体は既存サイトのローカル素材を使用し、対応する OFL ライセンス文を保存しています。
 - CV は本人が Google Drive で提供した最新版を `dist/assets/Taro_Nagata_Resume.pdf` として保存しています。
 - `dist/assets/cloud-stability-figure9.png` は、上記論文の出版社版 PDF 10 ページ目から Figure 9 を切り抜いた画像です（1578 × 663 px）。出版社版 1 ページ目で確認した [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) に基づき掲載しています。サイト上に著者、論文題名、The Astrophysical Journal、DOI、ライセンスへのリンクと切り抜きの説明を表示しています。出典：Taro M. Shefferson-Nagata & Kazumasa Ohno, “Radiatively Controlled Thermal Stability of High-Altitude Clouds in Exoplanetary Atmospheres,” The Astrophysical Journal 1005(2), 210 (2026), [doi:10.3847/1538-4357/ae7d27](https://doi.org/10.3847/1538-4357/ae7d27)。
-- ヒーローの惑星・軌道の canvas と制作物の概念図は、このサイト用のオリジナルの模式表現です。Figure 9 とは区別し、SpaceData の実データや研究の観測結果としては表示していません。
+- 制作物の概念図は、このサイト用のオリジナルの模式表現です。Figure 9 とは区別し、SpaceData の実データや研究の観測結果としては表示していません。
 - GitHub 上で公開されていることだけを理由に、他のリポジトリのソースへ再配布ライセンスを付与しません。このサイト全体のコード公開に適用するライセンスも、素材のライセンスとは区別して決めてください。
 
 ## プロジェクトの公式ロゴと追加説明
@@ -46,3 +46,17 @@ DiffHydro、Kavli IPMU、NAOJ、SpaceData、EAS 等の所属・活動の説明�
 - 個別の画像出典URLと寸法は [brand-assets.json](brand-assets.json) に保存しています。ロゴに新たなオープンソースライセンスは付けていません。
 - Tモノグラムはこの個人サイト用に作成しました。トップの模式的軌道図と出版論文の実際のFigure 9を区別して表示しています。
 - Space Weather Projectは表示上の名称です。既存の公開リポジトリと公開アプリのURLはそのまま参照しています。公開ラボのモデルとSpaceDataでの業務は詳細ページ内で区別しています。
+
+## ギャラリー写真（2026年11月19日追加）
+
+本人がこの更新のために提供した5枚を使用しています。撮影者、撮影地、撮影日、露光情報は推定で補っていません。色・構図・縦横比は維持し、配信用にWebP形式と幅480pxの軽量版へ変換しました。オリオン大星雲の右下の署名も維持しています。写真に新たな再配布ライセンスは付与していません。
+
+| 提供ファイル | 配信用ファイル（`dist/assets/gallery/`） |
+| --- | --- |
+| IMG_9371.jpeg | milky-way.webp / milky-way-480.webp |
+| IMG_1581.jpeg | star-trails.webp / star-trails-480.webp |
+| IMG_7804.jpeg | rosette-nebula.webp / rosette-nebula-480.webp |
+| IMG_8682.jpeg | orion-nebula.webp / orion-nebula-480.webp |
+| IMG_9283.jpeg | meadow.webp / meadow-480.webp |
+
+写真はトップのスライドショーとして掲載しています。約8秒間隔のクロスフェードのみを使い、色・構図・署名は保持しています。初回に必要な画像から読み込み、後続写真は順次先読みします。
