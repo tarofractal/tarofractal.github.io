@@ -20,8 +20,8 @@
   let slideshow = null;
 
   const messages = {
-    en: { copied: 'Email copied.', failed: 'Please copy: tarofractal@gmail.com', language: 'Switch to Japanese', night: 'Night', day: 'Day', pause: 'Pause slideshow', resume: 'Play slideshow', themeDark: 'Switch to night theme', themeLight: 'Switch to day theme' },
-    ja: { copied: 'メールアドレスをコピーしました。', failed: 'こちらをコピーしてください：tarofractal@gmail.com', language: 'Switch to English', night: '夜', day: '昼', pause: 'スライドを止める', resume: 'スライドを再生', themeDark: '夜のテーマに切り替える', themeLight: '昼のテーマに切り替える' }
+    en: { copied: 'Email copied.', failed: 'Please copy: tarofractal@gmail.com', language: 'Switch to Japanese', night: 'Night', day: 'Day', pause: 'Pause animations', resume: 'Play animations', themeDark: 'Switch to night theme', themeLight: 'Switch to day theme' },
+    ja: { copied: 'メールアドレスをコピーしました。', failed: 'こちらをコピーしてください：tarofractal@gmail.com', language: 'Switch to English', night: '夜', day: '昼', pause: 'アニメーションを止める', resume: 'アニメーションを再生', themeDark: '夜のテーマに切り替える', themeLight: '昼のテーマに切り替える' }
   };
 
   function updateControls() {
@@ -38,6 +38,7 @@
     if (motionLabel) motionLabel.textContent = paused ? m.resume : m.pause;
     const motionButton = byId('motion-toggle');
     motionButton?.setAttribute('aria-label', paused ? m.resume : m.pause);
+    motionButton?.setAttribute('aria-pressed', String(paused));
     if (copyState && byId('copy-status')) byId('copy-status').textContent = m[copyState];
     byId('motion-toggle')?.classList.toggle('is-paused', paused);
   }
@@ -113,7 +114,7 @@
   const slides = Array.from(document.querySelectorAll('.hero-slide'));
   const slideButtons = Array.from(document.querySelectorAll('[data-slide-select]'));
   if (slideshowElement && slides.length) {
-    const INTERVAL = 8000;
+    const INTERVAL = 5000;
     let activeSlide = 0;
     let timer = 0;
     let visible = true;
