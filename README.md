@@ -49,6 +49,8 @@ python3 -m http.server 3000 --directory dist
 
 `dist/fractals.js` にCanvasの描画処理があります。再帰的な細分化・折り畳み、複素数の反復、ニュートン法、反復関数系などを使用しています。画像素材や外部ライブラリは使っていません。背景は自己紹介の列に固定し、デスクトップでは最大700pxまで拡大しながら、写真のスライドショーとの間に余白を確保しています。
 
+初回は6回折り畳んだドラゴン曲線をすぐに表示し、そこからさらに細かく生成します。JavaScriptを読み込む前やCanvasが使えない場合も、同じ形のSVGを表示します。昼のテーマでも見えるように線幅と色のコントラストを調整しています。
+
 写真の再生ボタンで背景の生成も一時停止・再開できます。画面外・別タブ・写真の拡大表示中には背景の描画を休止します。OSの「動きを減らす」設定では完成形の静止表示となります。日英・昼夜テーマとスマートフォンの表示に対応しています。
 
 ## 内容を更新する
@@ -80,6 +82,7 @@ Sites の本人用確認ページ：<https://taro-nagata-observatory.tarofractal
 python3 scripts/check-site.py
 node --check dist/app.js
 node --check dist/fractals.js
+node scripts/check-fractal-start.cjs
 ```
 
 ローカルのリンク、アンカー、CSS素材、日英テキスト、PDF・図の形式と JavaScript 構文を確認できます。

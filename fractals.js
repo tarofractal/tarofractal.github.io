@@ -42,6 +42,7 @@
   let theme = '';
   let paletteScene = '';
   let staticPreview = false;
+  let introduction = true;
   const sprites = new Map();
   const geometries = new Map();
   const fillColors = new Map();
@@ -52,8 +53,8 @@
     const dark = theme === 'dark';
     paletteScene = scene.id;
     palette = {
-      ink: dark ? scene.colors[0] : mix(scene.colors[0], [18,47,104], .38),
-      tip: dark ? scene.colors[1] : mix(scene.colors[1], [27,44,112], .32),
+      ink: dark ? scene.colors[0] : mix(scene.colors[0], [10,35,95], .52),
+      tip: dark ? scene.colors[1] : mix(scene.colors[1], [20,35,105], .46),
       base: dark ? [12,21,39] : [245,248,253]
     };
     hero.style.setProperty('--fractal-ink', rgba(palette.ink));
@@ -174,7 +175,7 @@
     });
     path(context, points);
     context.strokeStyle = spectrum(context, .95);
-    context.lineWidth = Math.max(1.2, size / 650) * 2 / size;
+    context.lineWidth = Math.max(1.8, size / 430) * 2 / size;
     context.stroke();
   }
 
@@ -445,8 +446,10 @@
     if (!size) return;
     const scene = scenes[sceneIndex];
     if (paletteScene !== scene.id) usePalette();
-    const progress = progressOverride ?? clamp(elapsed / scene.duration);
-    const fade = Math.min(smooth(elapsed / FADE), 1 - smooth((elapsed - scene.duration - HOLD) / FADE));
+    const construction = clamp(elapsed / scene.duration);
+    // Show six folds on arrival instead of an invisible, fully faded straight line.
+    const progress = progressOverride ?? (introduction ? 1/2 + construction/2 : construction);
+    const fade = Math.min(introduction ? 1 : smooth(elapsed / FADE), 1 - smooth((elapsed - scene.duration - HOLD) / FADE));
     context.setTransform(1, 0, 0, 1, 0, 0);
     context.clearRect(0, 0, size, size);
     context.setTransform(size / 2, 0, 0, size / 2, size / 2, size / 2);
@@ -466,6 +469,8 @@
     const text = scene[language];
     if (caption && caption.textContent !== text) caption.textContent = text;
     if (caption) caption.style.opacity = String(progressOverride === undefined ? fade : 1);
+    // Only replace the inline SVG after a nonempty canvas frame has been painted.
+    canvas.parentElement.dataset.ready = 'true';
   }
 
   function canRun() {
@@ -481,6 +486,7 @@
     const scene = scenes[sceneIndex];
     if (elapsed >= scene.duration + HOLD + FADE) {
       elapsed = 0;
+      introduction = false;
       sceneIndex = (sceneIndex + 1) % scenes.length;
       sprites.clear();
     }

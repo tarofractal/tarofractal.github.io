@@ -72,16 +72,20 @@ html[lang=ja] .viewer-caption h2{font-size:1rem;letter-spacing:0}
 /* The fractal belongs to the text column, with a clear gap before the photo. */
 .hero{isolation:isolate;overflow:hidden}
 .hero-grid{position:relative;z-index:1}
-.fractal-background{position:absolute;right:-18px;top:50%;z-index:-1;width:min(700px,calc(100% + 150px));aspect-ratio:1;transform:translateY(-50%);pointer-events:none;opacity:.45;contain:layout paint}
+.fractal-background{position:absolute;right:-18px;top:50%;z-index:-1;width:min(700px,calc(100% + 150px));aspect-ratio:1;transform:translateY(-50%);pointer-events:none;opacity:.64;contain:layout paint}
 .fractal-background canvas{display:block;width:100%;height:100%}
-:root[data-theme=dark] .fractal-background{opacity:.54}
+.fractal-fallback{position:absolute;inset:0;display:block;width:100%;height:100%}
+.fractal-fallback-start{stop-color:#287d9d}.fractal-fallback-end{stop-color:#6551b9}
+:root[data-theme=dark] .fractal-fallback-start{stop-color:#46d0eb}:root[data-theme=dark] .fractal-fallback-end{stop-color:#8e7dff}
+.fractal-background[data-ready=true] .fractal-fallback{display:none}
+:root[data-theme=dark] .fractal-background{opacity:.64}
 .fractal-caption{position:absolute;bottom:17px;left:max(32px,calc((100% - 1120px)/2));z-index:1;display:flex;align-items:center;gap:10px;font:12px/1.6 var(--mono);letter-spacing:.045em;color:var(--muted);pointer-events:none}
 .fractal-caption::before{content:"";width:24px;height:2px;background:linear-gradient(90deg,var(--fractal-ink,var(--accent)),var(--fractal-tip,var(--accent)));border-radius:2px}
 @media(max-width:1050px){.fractal-background{right:-6px;width:calc(100% + 56px);max-width:640px}}
 @media(max-width:860px){.fractal-caption{left:22px}}
 @media(max-width:650px){
-  .fractal-background{left:50%;right:auto;width:min(calc(100% + 36px),400px);transform:translate(-50%,-50%);opacity:.34}
-  :root[data-theme=dark] .fractal-background{opacity:.43}
+  .fractal-background{left:50%;right:auto;width:min(calc(100% + 36px),400px);transform:translate(-50%,-50%);opacity:.49}
+  :root[data-theme=dark] .fractal-background{opacity:.53}
   .fractal-caption{left:18px;bottom:15px;font-size:12px}
 }
 @media print{.fractal-background,.fractal-caption{display:none}}
