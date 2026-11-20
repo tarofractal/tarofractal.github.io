@@ -474,8 +474,9 @@
   }
 
   function canRun() {
-    return visible && !document.hidden && root.dataset.motion !== 'paused'
-      && !reducedMotion.matches && !root.classList.contains('photo-viewer-open');
+    const motionAllowed = root.dataset.motion === 'running'
+      || (root.dataset.motion !== 'paused' && !reducedMotion.matches);
+    return visible && !document.hidden && motionAllowed && !root.classList.contains('photo-viewer-open');
   }
 
   function tick(time) {

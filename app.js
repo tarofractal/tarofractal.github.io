@@ -14,7 +14,9 @@
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   let locale = readPreference('language', 'en') === 'ja' ? 'ja' : 'en';
   let theme = readPreference('theme', 'light') === 'dark' ? 'dark' : 'light';
-  let paused = reducedMotion.matches || readPreference('motion', 'running') === 'paused';
+  // Only explicit play/pause choices are durable. The old key also stored
+  // automatic pauses caused by focusing or selecting a photograph.
+  let paused = readPreference('motion-v2', reducedMotion.matches ? 'paused' : 'running') === 'paused';
   let selectedFilter = 'all';
   let copyState = '';
   let slideshow = null;
@@ -91,7 +93,7 @@
     paused = next;
     root.dataset.motion = paused ? 'paused' : 'running';
     updateControls();
-    if (persist) savePreference('motion', paused ? 'paused' : 'running');
+    if (persist) savePreference('motion-v2', paused ? 'paused' : 'running');
     slideshow?.refresh();
   }
 
@@ -119,6 +121,7 @@
     let timer = 0;
     let visible = true;
     let hovered = false;
+    let focused = false;
     let request = 0;
     const pendingImages = new Map();
 
@@ -143,16 +146,15 @@
     function refreshSlideshow() {
       window.clearTimeout(timer);
       timer = 0;
-      if (paused || hovered || !visible || document.hidden || photoDialog?.open) return;
+      if (paused || hovered || focused || !visible || document.hidden || photoDialog?.open) return;
       timer = window.setTimeout(() => showSlide((activeSlide + 1) % slides.length), INTERVAL);
     }
 
     async function showSlide(index, manual = false) {
       window.clearTimeout(timer);
       const currentRequest = ++request;
-      if (manual) setMotion(true);
       await prepareImage(index);
-      if (currentRequest !== request || (!manual && (paused || hovered || !visible || document.hidden || photoDialog?.open))) return;
+      if (currentRequest !== request || (!manual && (paused || hovered || focused || !visible || document.hidden || photoDialog?.open))) return;
       activeSlide = index;
       slides.forEach((slide, i) => {
         const active = i === index;
@@ -177,7 +179,12 @@
       }
     });
     slideshowElement.addEventListener('focusin', (event) => {
-      if (!byId('motion-toggle').contains(event.target)) setMotion(true);
+      focused = !byId('motion-toggle').contains(event.target);
+      refreshSlideshow();
+    });
+    slideshowElement.addEventListener('focusout', (event) => {
+      focused = slideshowElement.contains(event.relatedTarget) && !byId('motion-toggle').contains(event.relatedTarget);
+      refreshSlideshow();
     });
     slideshowElement.addEventListener('pointerenter', (event) => {
       if (event.pointerType === 'mouse') { hovered = true; refreshSlideshow(); }
@@ -190,6 +197,16 @@
       }, { threshold: 0.1 }).observe(slideshowElement);
     }
     document.addEventListener('visibilitychange', refreshSlideshow);
+    window.addEventListener('pagehide', () => {
+      window.clearTimeout(timer);
+      timer = 0;
+      request += 1;
+    });
+    window.addEventListener('pageshow', () => {
+      hovered = false;
+      focused = slideshowElement.contains(document.activeElement) && !byId('motion-toggle').contains(document.activeElement);
+      refreshSlideshow();
+    });
     slideshow = { refresh: refreshSlideshow, translate: translateSlide };
     prepareImage(0).then(() => prepareImage(1));
   }

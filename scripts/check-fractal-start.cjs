@@ -5,7 +5,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 const source = fs.readFileSync(path.join(__dirname, '../dist/fractals.js'), 'utf8');
 
-function start({ paused = false, reduced = false, available = true } = {}) {
+function start({ paused = false, reduced = false, available = true, explicitPlay = false } = {}) {
   const strokes = [];
   let points = 0, pending = null;
   const ctx = new Proxy({
@@ -24,7 +24,7 @@ function start({ paused = false, reduced = false, available = true } = {}) {
     closest() { return hero; }
   };
   const caption = { textContent: '', style: {} };
-  const root = { dataset: { theme: 'light', motion: paused ? 'paused' : 'running' }, lang: 'en', classList: { contains() { return false; } } };
+  const root = { dataset: { theme: 'light', motion: explicitPlay ? 'running' : paused || reduced ? 'paused' : 'running' }, lang: 'en', classList: { contains() { return false; } } };
   const observer = class { observe() {} };
   vm.runInNewContext(source, {
     document: { documentElement: root, hidden: false, getElementById(id) { return id === 'fractal-canvas' ? canvas : caption; }, addEventListener() {} },
@@ -50,6 +50,7 @@ for (const options of [{ paused: true }, { reduced: true }]) {
 const unsupported = start({ available: false });
 assert.equal(unsupported.background.dataset.ready, undefined, 'Keep the inline SVG visible if Canvas cannot initialise.');
 assert.equal(unsupported.pending, null);
+assert(start({ reduced: true, explicitPlay: true }).pending, 'The play button must be able to override an initial reduced-motion pause.');
 const html = fs.readFileSync(path.join(__dirname, '../dist/index.html'), 'utf8');
 assert(html.includes('class="fractal-fallback"'), 'The initial curve must be present in the HTML, before JavaScript runs.');
 console.log('OK: visible initial curve, continued construction, paused/reduced static views, and no-Canvas fallback.');
