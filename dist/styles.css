@@ -36,7 +36,7 @@ html[data-motion=paused]{scroll-behavior:auto}@media(prefers-reduced-motion:redu
 html[data-motion=paused] .hero-slide{transition:none}
 @media(max-width:650px){
   .home-page .hero-grid{padding-block:28px 44px;gap:30px}
-  .hero-slideshow{grid-row:1;justify-self:stretch;width:100%;border-radius:10px}
+  .hero-slideshow{justify-self:stretch;width:100%;border-radius:10px}
   .slideshow-stage{aspect-ratio:auto;height:clamp(250px,72vw,340px)}
   .slideshow-footer{padding:6px 10px;gap:7px}
 }
