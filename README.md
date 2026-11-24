@@ -13,7 +13,8 @@ Taro Nagata / 永田 多朗のパーソナルサイト。研究、制作物、�
 | `dist/space-weather.html` | Space Weather Project の観測とモデル |
 | `dist/nobilva.html` | NOBILVA のAI開発・活動・公式ロゴ |
 | `dist/thy-and-i.html` | Thy & I のサービス・ウェブ開発・公式ロゴ |
-| `content/details.json` | 詳細4ページの日英コンテンツ |
+| `dist/quantum-minesweeper.html` | QUBLITZ 2026 の量子誤り検出・回路最適化・IQM実機結果 |
+| `content/details.json` | 詳細5ページの日英コンテンツ |
 | `scripts/render-detail-pages.py` | 詳細ページを生成するPythonスクリプト |
 | `dist/styles.css` | レイアウト、色、書体、レスポンシブ表示 |
 | `dist/app.js` | 日英切り替え、テーマ切り替え、動きの制御、写真の拡大表示 |
@@ -55,7 +56,7 @@ python3 -m http.server 3000 --directory dist
 
 ## 内容を更新する
 
-トップは `dist/index.html` の本文を編集します。詳細4ページは `content/details.json` を編集し、`python3 scripts/render-detail-pages.py` でHTMLを生成します。`data-en` と `data-ja` が付いた要素は、両方の言語を更新してください。外部リンク、所属、年、数値も同時に確認します。CV を差し替える場合は `dist/assets/` 内の PDF と HTML のリンク先を一致させます。
+トップは `dist/index.html` の本文を編集します。詳細5ページは `content/details.json` を編集し、`python3 scripts/render-detail-pages.py` でHTMLを生成します。`data-en` と `data-ja` が付いた要素は、両方の言語を更新してください。外部リンク、所属、年、数値も同時に確認します。CV を差し替える場合は `dist/assets/` 内の PDF と HTML のリンク先を一致させます。
 
 動きを加えるときは、動きを減らす OS 設定とサイト内の停止操作を維持してください。ルートへ同期したあと、公開前にスマートフォン幅、日英切り替え、昼夜テーマ、キーボード操作、連絡先・CV のリンクを確認します。
 

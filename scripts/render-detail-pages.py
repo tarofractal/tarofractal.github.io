@@ -1,4 +1,4 @@
-"""Render the four static detail pages from bilingual, editable JSON. No dependencies."""
+"""Render the static detail pages from bilingual, editable JSON. No dependencies."""
 from html import escape
 from pathlib import Path
 import json

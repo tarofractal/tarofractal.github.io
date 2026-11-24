@@ -641,5 +641,158 @@
         }
       }
     ]
+  },
+  "quantum-minesweeper": {
+    "kicker": {
+      "en": "PROJECT / QUANTUM COMPUTING · QUBLITZ 2026",
+      "ja": "プロジェクト / 量子コンピューティング · QUBLITZ 2026"
+    },
+    "title": {
+      "en": "Quantum Minesweeper",
+      "ja": "Quantum Minesweeper"
+    },
+    "subtitle": {
+      "en": "Quantum error detection and circuit optimization: from exact simulation to experiments on the IQM Garnet quantum processor.",
+      "ja": "量子誤り検出と量子回路の最適化。厳密なシミュレーションからIQM Garnet量子プロセッサでの実機検証まで。"
+    },
+    "facts": [
+      {
+        "label": {
+          "en": "EVENT",
+          "ja": "イベント"
+        },
+        "value": {
+          "en": "QUBLITZ 2026 · November 2026",
+          "ja": "QUBLITZ 2026 · 2026年11月"
+        }
+      },
+      {
+        "label": {
+          "en": "HARDWARE",
+          "ja": "実機"
+        },
+        "value": {
+          "en": "IQM Garnet · 2,048 shots",
+          "ja": "IQM Garnet · 2,048ショット"
+        }
+      },
+      {
+        "label": {
+          "en": "CLASSIFICATION SUCCESS",
+          "ja": "分類成功率"
+        },
+        "value": {
+          "en": "74.12% → 89.94%",
+          "ja": "74.12% → 89.94%"
+        }
+      },
+      {
+        "label": {
+          "en": "CZ GATES",
+          "ja": "CZゲート数"
+        },
+        "value": {
+          "en": "24 → 11 (example circuit)",
+          "ja": "24 → 11（代表回路）"
+        }
+      },
+      {
+        "label": {
+          "en": "TOOLS",
+          "ja": "使用技術"
+        },
+        "value": {
+          "en": "Python · Qiskit · IQM SDK · pytest",
+          "ja": "Python · Qiskit · IQM SDK · pytest"
+        }
+      }
+    ],
+    "sections": [
+      {
+        "heading": {
+          "en": "The challenge: detecting errors without reading the encoded state",
+          "ja": "課題：符号化した状態を直接読み出さずに誤りを検出する。"
+        },
+        "paragraphs": [
+          {
+            "en": "Quantum information is vulnerable to bit-flip and phase-flip errors. For QUBLITZ 2026, this project implemented four challenge levels, including recovery circuits for Levels 1–3 and a Level-4 syndrome classifier that distinguishes I, X, Y, and Z errors using two measured bits.",
+            "ja": "量子情報はビット反転や位相反転などの誤りの影響を受けます。QUBLITZ 2026では4段階の課題に取り組み、Level 1〜3の誤り回復回路と、2つの測定ビットからI・X・Y・Zの誤りを識別するLevel 4のシンドローム分類器を実装しました。"
+          }
+        ]
+      },
+      {
+        "heading": {
+          "en": "Circuit optimization and verification",
+          "ja": "量子回路の最適化と検証。"
+        },
+        "paragraphs": [
+          {
+            "en": "The project used exact-state simulation, native-gate compilation, and calibration-aware placement to reduce circuit overhead while preserving the intended syndrome extraction. In the representative +i/Y1 execution circuit, CZ gates fell from 24 to 11 and circuit depth from 45 to 17.",
+            "ja": "厳密な状態シミュレーション、実機のネイティブゲートへの変換、キャリブレーション情報に基づく量子ビット配置を用いて、意図したシンドローム抽出を保ちながら回路を簡素化しました。代表的な+i/Y1実行回路ではCZゲート数が24から11、回路深さが45から17に減少しました。"
+          }
+        ],
+        "bullets": [
+          {
+            "en": "78 of 78 ideal exact-native Level-4 cases passed for each variant.",
+            "ja": "Level 4の理想的なネイティブ回路検証では、改良前・改良後ともに78ケースすべてが成功。"
+          },
+          {
+            "en": "The archived regression suite reports 803 passing tests.",
+            "ja": "公開されている回帰テストの記録では803件すべてが成功。"
+          }
+        ]
+      },
+      {
+        "heading": {
+          "en": "Results on real quantum hardware",
+          "ja": "量子コンピュータ実機での結果。"
+        },
+        "paragraphs": [
+          {
+            "en": "A recorded IQM Garnet experiment compared eight balanced circuits with 256 shots each. The original design classified 759 of 1,024 shots correctly (74.12%); the improved design classified 921 of 1,024 (89.94%). The observed gain was 15.82 percentage points, with all shots retained.",
+            "ja": "IQM Garnet実機で、8回路を各256ショットで比較した実験記録を解析しました。改良前は1,024ショット中759回（74.12%）、改良後は921回（89.94%）の分類に成功。すべてのショットを含めた比較で15.82パーセントポイントの改善が見られました。"
+          },
+          {
+            "en": "The saved execution receipt, native circuit definition, measurement counts, and calibration identifiers were cross-checked locally. The repository preserves the execution artifacts and analysis workflow for reproducibility.",
+            "ja": "保存された実行記録、ネイティブ回路定義、測定カウント、キャリブレーションIDをローカルで照合しました。再現性のために実行データと解析手順をリポジトリに保存しています。"
+          }
+        ]
+      },
+      {
+        "heading": {
+          "en": "What the results do and do not establish",
+          "ja": "結果の意味と限界。"
+        },
+        "paragraphs": [
+          {
+            "en": "The hardware metric is syndrome-classification success, not logical-state fidelity. Hardware recovery for Levels 1–3 was not measured; the comparison also does not isolate the individual causes of the improvement or establish globally optimal compilation. The recorded hardware evidence is reproduced from saved artifacts rather than a new server retrieval.",
+            "ja": "実機で評価した指標はシンドローム分類成功率であり、論理量子状態の忠実度ではありません。Level 1〜3の実機での誤り回復は未測定で、改善要因ごとの寄与や回路の大域的最適性も証明していません。実機の証拠は保存済みデータの再解析に基づき、新たなサーバー照会によるものではありません。"
+          }
+        ]
+      }
+    ],
+    "links": [
+      {
+        "href": "https://github.com/tarofractal/qublitz-quantum-minesweeper",
+        "label": {
+          "en": "View source code & results",
+          "ja": "ソースコード・結果を見る"
+        }
+      },
+      {
+        "href": "https://github.com/tarofractal/qublitz-quantum-minesweeper/blob/main/docs/live-demo.html",
+        "label": {
+          "en": "Interactive demo source",
+          "ja": "インタラクティブデモのソース"
+        }
+      },
+      {
+        "href": "https://github.com/tarofractal/qublitz-quantum-minesweeper/tree/main/results/iqm-hardware-analysis",
+        "label": {
+          "en": "Hardware analysis",
+          "ja": "実機データ解析"
+        }
+      }
+    ]
   }
 }
